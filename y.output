@@ -1,0 +1,299 @@
+Grammar
+
+    0 $accept: sentence $end
+
+    1 sentence: nphrase VERB termpunct
+    2         | nphrase VERB vmodifier termpunct
+    3         | nphrase VERB nphrase termpunct
+    4         | END
+
+    5 termpunct: '.'
+    6          | '!'
+
+    7 nphrase: modifiednoun
+    8        | ARTICLE modifiednoun
+
+    9 modifiednoun: NOUN
+   10             | nmodifier modifiednoun
+
+   11 nmodifier: ADJECTIVE
+   12          | ADVERB nmodifier
+
+   13 vmodifier: ADVERB
+   14          | ADVERB vmodifier
+   15          | PREPOSITION nphrase
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 6
+'.' (46) 5
+error (256)
+ARTICLE (258) 8
+VERB (259) 1 2 3
+NOUN (260) 9
+ADJECTIVE (261) 11
+ADVERB (262) 12 13 14
+PREPOSITION (263) 15
+END (264) 4
+
+
+Nonterminals, with rules where they appear
+
+$accept (12)
+    on left: 0
+sentence (13)
+    on left: 1 2 3 4, on right: 0
+termpunct (14)
+    on left: 5 6, on right: 1 2 3
+nphrase (15)
+    on left: 7 8, on right: 1 2 3 15
+modifiednoun (16)
+    on left: 9 10, on right: 7 8 10
+nmodifier (17)
+    on left: 11 12, on right: 10 12
+vmodifier (18)
+    on left: 13 14 15, on right: 2 14
+
+
+State 0
+
+    0 $accept: . sentence $end
+
+    ARTICLE    shift, and go to state 1
+    NOUN       shift, and go to state 2
+    ADJECTIVE  shift, and go to state 3
+    ADVERB     shift, and go to state 4
+    END        shift, and go to state 5
+
+    sentence      go to state 6
+    nphrase       go to state 7
+    modifiednoun  go to state 8
+    nmodifier     go to state 9
+
+
+State 1
+
+    8 nphrase: ARTICLE . modifiednoun
+
+    NOUN       shift, and go to state 2
+    ADJECTIVE  shift, and go to state 3
+    ADVERB     shift, and go to state 4
+
+    modifiednoun  go to state 10
+    nmodifier     go to state 9
+
+
+State 2
+
+    9 modifiednoun: NOUN .
+
+    $default  reduce using rule 9 (modifiednoun)
+
+
+State 3
+
+   11 nmodifier: ADJECTIVE .
+
+    $default  reduce using rule 11 (nmodifier)
+
+
+State 4
+
+   12 nmodifier: ADVERB . nmodifier
+
+    ADJECTIVE  shift, and go to state 3
+    ADVERB     shift, and go to state 4
+
+    nmodifier  go to state 11
+
+
+State 5
+
+    4 sentence: END .
+
+    $default  reduce using rule 4 (sentence)
+
+
+State 6
+
+    0 $accept: sentence . $end
+
+    $end  shift, and go to state 12
+
+
+State 7
+
+    1 sentence: nphrase . VERB termpunct
+    2         | nphrase . VERB vmodifier termpunct
+    3         | nphrase . VERB nphrase termpunct
+
+    VERB  shift, and go to state 13
+
+
+State 8
+
+    7 nphrase: modifiednoun .
+
+    $default  reduce using rule 7 (nphrase)
+
+
+State 9
+
+   10 modifiednoun: nmodifier . modifiednoun
+
+    NOUN       shift, and go to state 2
+    ADJECTIVE  shift, and go to state 3
+    ADVERB     shift, and go to state 4
+
+    modifiednoun  go to state 14
+    nmodifier     go to state 9
+
+
+State 10
+
+    8 nphrase: ARTICLE modifiednoun .
+
+    $default  reduce using rule 8 (nphrase)
+
+
+State 11
+
+   12 nmodifier: ADVERB nmodifier .
+
+    $default  reduce using rule 12 (nmodifier)
+
+
+State 12
+
+    0 $accept: sentence $end .
+
+    $default  accept
+
+
+State 13
+
+    1 sentence: nphrase VERB . termpunct
+    2         | nphrase VERB . vmodifier termpunct
+    3         | nphrase VERB . nphrase termpunct
+
+    ARTICLE      shift, and go to state 1
+    NOUN         shift, and go to state 2
+    ADJECTIVE    shift, and go to state 3
+    ADVERB       shift, and go to state 15
+    PREPOSITION  shift, and go to state 16
+    '.'          shift, and go to state 17
+    '!'          shift, and go to state 18
+
+    termpunct     go to state 19
+    nphrase       go to state 20
+    modifiednoun  go to state 8
+    nmodifier     go to state 9
+    vmodifier     go to state 21
+
+
+State 14
+
+   10 modifiednoun: nmodifier modifiednoun .
+
+    $default  reduce using rule 10 (modifiednoun)
+
+
+State 15
+
+   12 nmodifier: ADVERB . nmodifier
+   13 vmodifier: ADVERB .
+   14          | ADVERB . vmodifier
+
+    ADJECTIVE    shift, and go to state 3
+    ADVERB       shift, and go to state 15
+    PREPOSITION  shift, and go to state 16
+
+    $default  reduce using rule 13 (vmodifier)
+
+    nmodifier  go to state 11
+    vmodifier  go to state 22
+
+
+State 16
+
+   15 vmodifier: PREPOSITION . nphrase
+
+    ARTICLE    shift, and go to state 1
+    NOUN       shift, and go to state 2
+    ADJECTIVE  shift, and go to state 3
+    ADVERB     shift, and go to state 4
+
+    nphrase       go to state 23
+    modifiednoun  go to state 8
+    nmodifier     go to state 9
+
+
+State 17
+
+    5 termpunct: '.' .
+
+    $default  reduce using rule 5 (termpunct)
+
+
+State 18
+
+    6 termpunct: '!' .
+
+    $default  reduce using rule 6 (termpunct)
+
+
+State 19
+
+    1 sentence: nphrase VERB termpunct .
+
+    $default  reduce using rule 1 (sentence)
+
+
+State 20
+
+    3 sentence: nphrase VERB nphrase . termpunct
+
+    '.'  shift, and go to state 17
+    '!'  shift, and go to state 18
+
+    termpunct  go to state 24
+
+
+State 21
+
+    2 sentence: nphrase VERB vmodifier . termpunct
+
+    '.'  shift, and go to state 17
+    '!'  shift, and go to state 18
+
+    termpunct  go to state 25
+
+
+State 22
+
+   14 vmodifier: ADVERB vmodifier .
+
+    $default  reduce using rule 14 (vmodifier)
+
+
+State 23
+
+   15 vmodifier: PREPOSITION nphrase .
+
+    $default  reduce using rule 15 (vmodifier)
+
+
+State 24
+
+    3 sentence: nphrase VERB nphrase termpunct .
+
+    $default  reduce using rule 3 (sentence)
+
+
+State 25
+
+    2 sentence: nphrase VERB vmodifier termpunct .
+
+    $default  reduce using rule 2 (sentence)
