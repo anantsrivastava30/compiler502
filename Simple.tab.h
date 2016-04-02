@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_SIMPLE_TAB_H_INCLUDED
+# define YY_YY_SIMPLE_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,27 +45,40 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ARTICLE = 258,
-    VERB = 259,
-    NOUN = 260,
-    ADJECTIVE = 261,
-    ADVERB = 262,
-    PREPOSITION = 263,
-    END = 264
+    NUMBER = 258,
+    IDENTIFIER = 259,
+    IF = 260,
+    WHILE = 261,
+    SKIP = 262,
+    THEN = 263,
+    ELSE = 264,
+    FI = 265,
+    DO = 266,
+    END = 267,
+    INTEGER = 268,
+    READ = 269,
+    WRITE = 270,
+    LET = 271,
+    IN = 272,
+    ASSGNOP = 273
   };
 #endif
-/* Tokens.  */
-#define ARTICLE 258
-#define VERB 259
-#define NOUN 260
-#define ADJECTIVE 261
-#define ADVERB 262
-#define PREPOSITION 263
-#define END 264
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+#line 66 "Simple.y" /* yacc.c:1909  */
+union semrec
+{
+#line 67 "Simple.y" /* yacc.c:1909  */
+
+int	intval;								/* Integer value */
+char *id;								/* Identifiers	*/
+struct lbs *lbls;						/* For backpatching	*/
+
+#line 79 "Simple.tab.h" /* yacc.c:1909  */
+};
+#line 66 "Simple.y" /* yacc.c:1909  */
+typedef union semrec YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -75,4 +88,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_SIMPLE_TAB_H_INCLUDED  */
