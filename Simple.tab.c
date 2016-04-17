@@ -72,6 +72,7 @@ C Libraries, Symbol Table, Code Generator & other C code
 #include <stdio.h>
 /* For I/O																*/
 #include <stdlib.h>
+
 /* For malloc here and in symbol table									*/
 #include <string.h>
 /* For strcmp in symbol table											*/
@@ -128,7 +129,7 @@ context_check( enum code_ops operation, char *sym_name )
 							SEMANTIC RECORDS
 =========================================================================*/
 
-#line 132 "Simple.tab.c" /* yacc.c:339  */
+#line 133 "Simple.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -184,18 +185,18 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-#line 66 "Simple.y" /* yacc.c:355  */
+#line 67 "Simple.y" /* yacc.c:355  */
 union semrec
 {
-#line 67 "Simple.y" /* yacc.c:355  */
+#line 68 "Simple.y" /* yacc.c:355  */
 
 int	intval;								/* Integer value */
 char *id;								/* Identifiers	*/
 struct lbs *lbls;						/* For backpatching	*/
 
-#line 197 "Simple.tab.c" /* yacc.c:355  */
+#line 198 "Simple.tab.c" /* yacc.c:355  */
 };
-#line 66 "Simple.y" /* yacc.c:355  */
+#line 67 "Simple.y" /* yacc.c:355  */
 typedef union semrec YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -210,7 +211,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 214 "Simple.tab.c" /* yacc.c:358  */
+#line 215 "Simple.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -509,10 +510,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    94,    94,    92,    98,    99,   101,   102,   104,   105,
-     107,   108,   109,   110,   111,   113,   114,   111,   120,   124,
-     120,   134,   135,   136,   137,   138,   139,   140,   141,   142,
-     143,   144
+       0,    95,    95,    93,    99,   100,   102,   103,   105,   106,
+     108,   109,   110,   111,   112,   114,   115,   112,   121,   125,
+     121,   135,   136,   137,   138,   139,   140,   141,   142,   143,
+     144,   145
 };
 #endif
 
@@ -1327,158 +1328,158 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 94 "Simple.y" /* yacc.c:1646  */
+#line 95 "Simple.y" /* yacc.c:1646  */
     {	gen_code( DATA, data_location() - 1 );				}
-#line 1333 "Simple.tab.c" /* yacc.c:1646  */
+#line 1334 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 96 "Simple.y" /* yacc.c:1646  */
+#line 97 "Simple.y" /* yacc.c:1646  */
     {	gen_code( HALT, 0 ); YYACCEPT;						}
-#line 1339 "Simple.tab.c" /* yacc.c:1646  */
+#line 1340 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 99 "Simple.y" /* yacc.c:1646  */
+#line 100 "Simple.y" /* yacc.c:1646  */
     {	install( (yyvsp[-1].id) );					}
-#line 1345 "Simple.tab.c" /* yacc.c:1646  */
+#line 1346 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 102 "Simple.y" /* yacc.c:1646  */
+#line 103 "Simple.y" /* yacc.c:1646  */
     {	install( (yyvsp[-1].id) );							}
-#line 1351 "Simple.tab.c" /* yacc.c:1646  */
+#line 1352 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 108 "Simple.y" /* yacc.c:1646  */
+#line 109 "Simple.y" /* yacc.c:1646  */
     {    context_check( READ_INT, (yyvsp[0].id) );				}
-#line 1357 "Simple.tab.c" /* yacc.c:1646  */
+#line 1358 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 109 "Simple.y" /* yacc.c:1646  */
+#line 110 "Simple.y" /* yacc.c:1646  */
     {	gen_code( WRITE_INT, 0 );							}
-#line 1363 "Simple.tab.c" /* yacc.c:1646  */
+#line 1364 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 110 "Simple.y" /* yacc.c:1646  */
+#line 111 "Simple.y" /* yacc.c:1646  */
     { context_check( STORE, (yyvsp[-2].id) );				}
-#line 1369 "Simple.tab.c" /* yacc.c:1646  */
+#line 1370 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 111 "Simple.y" /* yacc.c:1646  */
+#line 112 "Simple.y" /* yacc.c:1646  */
     {	(yyvsp[-1].lbls) = (struct lbs *) newlblrec();
 					(yyvsp[-1].lbls)->for_jmp_false = reserve_loc(); 					}
-#line 1376 "Simple.tab.c" /* yacc.c:1646  */
+#line 1377 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 113 "Simple.y" /* yacc.c:1646  */
+#line 114 "Simple.y" /* yacc.c:1646  */
     { (yyvsp[-4].lbls)->for_goto = reserve_loc(); 					}
-#line 1382 "Simple.tab.c" /* yacc.c:1646  */
+#line 1383 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 114 "Simple.y" /* yacc.c:1646  */
+#line 115 "Simple.y" /* yacc.c:1646  */
     { back_patch( (yyvsp[-6].lbls)->for_jmp_false,
 							JMP_FALSE,
 							gen_label() ); 								}
-#line 1390 "Simple.tab.c" /* yacc.c:1646  */
+#line 1391 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 119 "Simple.y" /* yacc.c:1646  */
+#line 120 "Simple.y" /* yacc.c:1646  */
     { back_patch( (yyvsp[-9].lbls)->for_goto, GOTO, gen_label() ); 		}
-#line 1396 "Simple.tab.c" /* yacc.c:1646  */
+#line 1397 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 120 "Simple.y" /* yacc.c:1646  */
+#line 121 "Simple.y" /* yacc.c:1646  */
     { (yyvsp[0].lbls) = (struct lbs *) newlblrec();
 				  (yyvsp[0].lbls)->for_goto = gen_label(); 							}
-#line 1403 "Simple.tab.c" /* yacc.c:1646  */
+#line 1404 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 124 "Simple.y" /* yacc.c:1646  */
+#line 125 "Simple.y" /* yacc.c:1646  */
     { (yyvsp[-2].lbls)->for_jmp_false = reserve_loc();					}
-#line 1409 "Simple.tab.c" /* yacc.c:1646  */
+#line 1410 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 128 "Simple.y" /* yacc.c:1646  */
+#line 129 "Simple.y" /* yacc.c:1646  */
     { gen_code( GOTO, (yyvsp[-6].lbls)->for_goto );
 				  back_patch( (yyvsp[-6].lbls)->for_jmp_false,
 						JMP_FALSE,
 						gen_label() );									}
-#line 1418 "Simple.tab.c" /* yacc.c:1646  */
+#line 1419 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 134 "Simple.y" /* yacc.c:1646  */
+#line 135 "Simple.y" /* yacc.c:1646  */
     { gen_code( LD_INT, (yyvsp[0].intval) );							}
-#line 1424 "Simple.tab.c" /* yacc.c:1646  */
+#line 1425 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 135 "Simple.y" /* yacc.c:1646  */
+#line 136 "Simple.y" /* yacc.c:1646  */
     { context_check( LD_VAR, (yyvsp[0].id) );						}
-#line 1430 "Simple.tab.c" /* yacc.c:1646  */
+#line 1431 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 136 "Simple.y" /* yacc.c:1646  */
+#line 137 "Simple.y" /* yacc.c:1646  */
     { gen_code( LT, 0 );								}
-#line 1436 "Simple.tab.c" /* yacc.c:1646  */
+#line 1437 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 137 "Simple.y" /* yacc.c:1646  */
+#line 138 "Simple.y" /* yacc.c:1646  */
     { gen_code( EQ, 0 );								}
-#line 1442 "Simple.tab.c" /* yacc.c:1646  */
+#line 1443 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 138 "Simple.y" /* yacc.c:1646  */
+#line 139 "Simple.y" /* yacc.c:1646  */
     { gen_code( GT, 0 );								}
-#line 1448 "Simple.tab.c" /* yacc.c:1646  */
+#line 1449 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 139 "Simple.y" /* yacc.c:1646  */
+#line 140 "Simple.y" /* yacc.c:1646  */
     { gen_code( ADD, 0 );								}
-#line 1454 "Simple.tab.c" /* yacc.c:1646  */
+#line 1455 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 140 "Simple.y" /* yacc.c:1646  */
+#line 141 "Simple.y" /* yacc.c:1646  */
     { gen_code( SUB, 0 );								}
-#line 1460 "Simple.tab.c" /* yacc.c:1646  */
+#line 1461 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 141 "Simple.y" /* yacc.c:1646  */
+#line 142 "Simple.y" /* yacc.c:1646  */
     { gen_code( MULT, 0 );								}
-#line 1466 "Simple.tab.c" /* yacc.c:1646  */
+#line 1467 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 142 "Simple.y" /* yacc.c:1646  */
+#line 143 "Simple.y" /* yacc.c:1646  */
     { gen_code( DIV, 0 );								}
-#line 1472 "Simple.tab.c" /* yacc.c:1646  */
+#line 1473 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 143 "Simple.y" /* yacc.c:1646  */
+#line 144 "Simple.y" /* yacc.c:1646  */
     { gen_code( PWR, 0 );								}
-#line 1478 "Simple.tab.c" /* yacc.c:1646  */
+#line 1479 "Simple.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1482 "Simple.tab.c" /* yacc.c:1646  */
+#line 1483 "Simple.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1706,23 +1707,26 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 146 "Simple.y" /* yacc.c:1906  */
+#line 147 "Simple.y" /* yacc.c:1906  */
 
 /*=========================================================================
 MAIN
 =========================================================================*/
 main( int argc, char *argv[] )
-{ extern FILE *yyin;
-++argv; --argc;
-yyin = fopen( argv[0], "r" );
-/*yydebug = 1;*/
-errors = 0;
-yyparse ();
-printf ( "Parse Completed\n" );
-if ( errors == 0 )
-{ print_code ();
-fetch_execute_cycle();
-}
+{   extern FILE *yyin;
+	++argv; --argc;
+	yyin = fopen( argv[0], "r" );
+	
+	/*yydebug = 1;*/
+	errors = 0;
+	yyparse ();
+	printf ( "Parse Completed\n" );
+	if ( errors == 0 )
+	{	 
+		FILE *fp = fopen("mc.txt","w+");
+		print_code (fp);
+		fclose(fp);
+	}
 }
 /*=========================================================================
 YYERROR

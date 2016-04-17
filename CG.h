@@ -35,11 +35,11 @@ code[addr].arg = arg;
 /*-------------------------------------------------------------------------
 Print Code to stdio
 -------------------------------------------------------------------------*/
-void print_code()
+void print_code( FILE *fp )
 {
 	int i = 0;
 	while (i < code_offset) {
-		printf("%3ld: %-10s%4ld\n",i,op_name[(int) code[i].op], code[i].arg );
+		fprintf(fp,"%3ld: %-10s%4ld\n",i,op_name[(int) code[i].op], code[i].arg );
 		i++;
 	}
 }

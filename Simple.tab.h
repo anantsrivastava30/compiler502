@@ -66,10 +66,10 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-#line 66 "Simple.y" /* yacc.c:1909  */
+#line 67 "Simple.y" /* yacc.c:1909  */
 union semrec
 {
-#line 67 "Simple.y" /* yacc.c:1909  */
+#line 68 "Simple.y" /* yacc.c:1909  */
 
 int	intval;								/* Integer value */
 char *id;								/* Identifiers	*/
@@ -77,7 +77,7 @@ struct lbs *lbls;						/* For backpatching	*/
 
 #line 79 "Simple.tab.h" /* yacc.c:1909  */
 };
-#line 66 "Simple.y" /* yacc.c:1909  */
+#line 67 "Simple.y" /* yacc.c:1909  */
 typedef union semrec YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

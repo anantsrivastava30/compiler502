@@ -7,6 +7,7 @@ C Libraries, Symbol Table, Code Generator & other C code
 #include <stdio.h>
 /* For I/O																*/
 #include <stdlib.h>
+
 /* For malloc here and in symbol table									*/
 #include <string.h>
 /* For strcmp in symbol table											*/
@@ -148,17 +149,20 @@ exp : NUMBER		{ gen_code( LD_INT, $1 );							}
 MAIN
 =========================================================================*/
 main( int argc, char *argv[] )
-{ extern FILE *yyin;
-++argv; --argc;
-yyin = fopen( argv[0], "r" );
-/*yydebug = 1;*/
-errors = 0;
-yyparse ();
-printf ( "Parse Completed\n" );
-if ( errors == 0 )
-{ print_code ();
-fetch_execute_cycle();
-}
+{   extern FILE *yyin;
+	++argv; --argc;
+	yyin = fopen( argv[0], "r" );
+	
+	/*yydebug = 1;*/
+	errors = 0;
+	yyparse ();
+	printf ( "Parse Completed\n" );
+	if ( errors == 0 )
+	{	 
+		FILE *fp = fopen("mc.txt","w+");
+		print_code (fp);
+		fclose(fp);
+	}
 }
 /*=========================================================================
 YYERROR
