@@ -26,6 +26,12 @@ void gen_code( enum code_ops operation, int arg )
 { code[code_offset].op = operation;
   code[code_offset++].arg = arg;
 }
+
+void gen_code_bool( enum code_ops operation, char *arg )
+{ code[code_offset].op = operation;
+  code[code_offset++].name = arg;
+}
+
 			/* Generates code at a reserved location	*/
 void back_patch( int addr, enum code_ops operation, int arg )
 {
@@ -39,8 +45,14 @@ void print_code( FILE *fp )
 {
 	int i = 0;
 	while (i < code_offset) {
-		fprintf(fp,"%3ld: %-10s%4ld\n",i,op_name[(int) code[i].op], code[i].arg );
+	if( strcmp(op_name[(int) code[i].op],"ld_bol") == 0 ) {
+	fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;		
+		}
+	else {
+	fprintf(fp,"%3ld: %-10s%4ld\n",i,op_name[(int) code[i].op], code[i].arg );
 		i++;
+		}
 	}
 }
 /************************** End Code Generator **************************/

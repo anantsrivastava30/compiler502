@@ -7,20 +7,23 @@
 /* OPERATIONS: Internal Representation */
 
 enum code_ops { HALT, STORE, JMP_FALSE, GOTO,
-				DATA, LD_INT, LD_VAR,
+				DATA, LD_INT, LD_VAR, LD_BOL,
 				READ_INT, WRITE_INT,
+				READ_BOL, WRITE_BOL,
 			LT, EQ, GT, ADD, SUB, MULT, DIV, PWR };
 			
 /* OPERATIONS: External Representation */
 
 char *op_name[] = {"halt", "store", "jmp_false", "goto",
-					"data", "ld_int", "ld_var",
+					"data", "ld_int", "ld_var", "ld_bol",
 					"in_int", "out_int",
+					"in_bol", "out_bol",
 					"lt", "eq", "gt", "add", "sub", "mult", "div", "pwr" };
 struct instruction
 {
 	enum code_ops op;
 	int arg;
+	char * name;
 };
 
 /* CODE Array */

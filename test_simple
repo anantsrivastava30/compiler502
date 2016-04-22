@@ -1,10 +1,21 @@
 let
-	integer n,x.
+	integer n; integer x; integer y,z; boolean b;
 in
-	read n;
-	if n < 10 then x := 1; else skip; fi;
-	while n < 10 do x := 5*x; n:= n+1;end;
+	read z;
+	b := true; 
+	if b then 
+		x := 1; 
+	else 
+		skip; 
+	fi;
+	while z < 10 do 
+		x := 5*x; 
+		z:= z+1;
+	end;
+	
 	skip;
-	write n;
+	
+	write z;
 	write x;
+	write #b;
 end

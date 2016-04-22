@@ -12,6 +12,7 @@ struct symrec
 {
 	char *name; /* name of symbol */
 	int offset; /* data offset */
+	int type;
 	struct symrec *next; /* link field */
 };
 typedef struct symrec symrec;
@@ -31,11 +32,12 @@ symrec *sym_table = (symrec *)0; /* The pointer to the Symbol Table */
 Operations: Putsym, Getsym
 ========================================================================*/
 
-symrec * putsym (char *sym_name)
+symrec * putsym (char *sym_name, int type)
 {
 	symrec *ptr;
 	ptr = (symrec *) malloc (sizeof(symrec));
 	ptr->name = (char *) malloc (strlen(sym_name)+1);
+	ptr->type = type;
 	strcpy (ptr->name,sym_name);
 	ptr->offset = data_location();
 	ptr->next = (struct symrec *)sym_table;
