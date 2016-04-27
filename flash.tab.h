@@ -45,42 +45,54 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    BOOLEAN = 258,
-    NUMBER = 259,
-    IDENTIFIER = 260,
-    IF = 261,
-    WHILE = 262,
-    SKIP = 263,
-    THEN = 264,
-    ELSE = 265,
-    FI = 266,
-    DO = 267,
-    END = 268,
-    INTEGER = 269,
-    READ = 270,
-    WRITE = 271,
-    LET = 272,
-    IN = 273,
-    BOOLE = 274,
-    ASSGNOP = 275
+    STRING = 258,
+    BOOLEAN = 259,
+    NUMBER = 260,
+    IDENTIFIER = 261,
+    IF = 262,
+    WHILE = 263,
+    SKIP = 264,
+    THEN = 265,
+    ELSE = 266,
+    FI = 267,
+    DO = 268,
+    END = 269,
+    INTEGER = 270,
+    READ = 271,
+    WRITE = 272,
+    LET = 273,
+    IN = 274,
+    BOOLE = 275,
+    STR = 276,
+    STACK = 277,
+    ASSGNOP = 278,
+    LEQ = 279,
+    GEQ = 280,
+    ONTO = 281,
+    OUTFROM = 282,
+    FUN = 283,
+    END_FUN = 284,
+    RETURN = 285,
+    CALL = 286
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-#line 71 "flash.y" /* yacc.c:1909  */
+#line 99 "flash.y" /* yacc.c:1909  */
 union semrec
 {
-#line 72 "flash.y" /* yacc.c:1909  */
+#line 100 "flash.y" /* yacc.c:1909  */
 
 int	intval;								/* Integer value */
 char *id;								/* Identifiers	*/
 struct lbs *lbls;						/* For backpatching	*/
-char *boolval;						
+char *boolval;	
+char *strval;						
 
-#line 82 "flash.tab.h" /* yacc.c:1909  */
+#line 94 "flash.tab.h" /* yacc.c:1909  */
 };
-#line 71 "flash.y" /* yacc.c:1909  */
+#line 99 "flash.y" /* yacc.c:1909  */
 typedef union semrec YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

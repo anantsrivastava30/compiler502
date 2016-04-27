@@ -1,0 +1,22 @@
+let
+	integer e1,e2; boolean b,d;
+	
+	fun add(integer i; integer j;)
+		integer a;
+		a := i + j;
+		return a;
+	end_fun
+	
+	fun sub(integer i; integer j;)
+		integer a;
+		a := i + j;
+		return a;
+	end_fun
+	
+in
+	read e1;
+	read e2;
+	e2 := 5+5;
+	call add(e1, e2);
+	call sub(e1, e2);
+end
