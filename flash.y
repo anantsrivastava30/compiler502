@@ -99,30 +99,25 @@ context_check_fun( enum code_ops operation, char *sym_name ,int type)
 	else gen_fun( operation, identifier->name );		
 }
 
-argument_check(char* sym_name)
+argument_check(char* sym_name, int arg)
 {
 	
 	symrec *identifier;		
 	identifier = getsym( sym_name );
-	int n = as[fun_offset-1].q.count;
-	printf("%s\n",as[fun_offset-1].q.element[n-1]);
+	int n = identifier->type; 
+	char * checker = as[fun_offset-1].q.element[arg_offset-1];
 	if ( identifier == 0 ) { 
 		errors++;
 		yyerror( strcat(sym_name," is an undeclared identifier") );
 		}
 	else {
-		/*for(int i=0; i < n;i++) {
-			if (!strcmp(as[fun_offset-1].q.element[i],"PARA_INT")
-				&&	identifier->type != 1 )
+			if ( !strcmp(checker,"PARA_INT")  &&	identifier->type != 1 )
 				yyerror( strcat(sym_name," parameter type mismatch!") );
-			else if (strcmp(as[fun_offset-1].q.element[i],"PARA_BOOL")
-				&&	identifier->type != 0 )
+			else if (!strcmp(checker,"PARA_BOOL")  &&	identifier->type != 0 )
 				yyerror( strcat(sym_name," parameter type mismatch!") );
-			else if (strcmp(as[fun_offset-1].q.element[i],"PARA_STR")
-				&&	identifier->type != 2 )
+			else if (!strcmp(checker,"PARA_STR")  &&	identifier->type != 2 )
 				yyerror( strcat(sym_name," parameter type mismatch!") );
-			}*/
-		}
+			}
 	gen_code( ARG, identifier->offset );
 }	
 
@@ -209,8 +204,7 @@ fun : FUN IDENTIFIER
 	commands
     END_FUN 
     { 
-    	gen_code( FUN_EN, 0); 
-		deactivate(block_offset);
+    	gen_code( FUN_EN, 0);
     } 
 ;
 parameter : /* empty */ 
@@ -221,33 +215,36 @@ parameters : SKIP
 	{	
 		install( $2 , 1, block_offset );
 		context_check(PARA_INT , $2, -1);
-		add_para_to_as(block_offset,"PARA_INT");					
+		add_para_to_as(block_offset,"PARA_INT");
+		//printf("argi : %d\n",fun_offset);					
 	}
 	| BOOLE IDENTIFIER ';' 
 	{	
 		install( $2 , 0, block_offset );
 		context_check(PARA_BOOL , $2, -1);	
-		add_para_to_as(block_offset,"PARA_BOOL");				
+		add_para_to_as(block_offset,"PARA_BOOL");	
+		//printf("argb : %d\n",fun_offset)	;			
 	}
 	| STR IDENTIFIER ';' 
 	{	
 		install( $2 , 2, block_offset );
 		context_check(PARA_STR , $2, -1);
-		add_para_to_as(block_offset,"PARA_STR");					
+		add_para_to_as(block_offset,"PARA_STR");
+		//printf("args : %d\n",fun_offset)		;				
 	}
 ;
 arguments : /* empty */
 	| argument IDENTIFIER	
 	{ 
-		argument_check($2);
-		arg_offset++;				
+		arg_offset++;
+		argument_check($2,arg_offset);				
 	}
 ;
 argument : /* empty */
 	| argument IDENTIFIER ','
 	{	
-		argument_check($2);
-		arg_offset++;			
+		arg_offset++;	
+		argument_check($2,arg_offset);			
 	}
 ;
 

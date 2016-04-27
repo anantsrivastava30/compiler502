@@ -1,13 +1,27 @@
 #ifndef __QUEQE_H__
 #define __QUEUE_H__
 
+
+
+
 struct Queue {
 	char** element;
-	size_t size;	/*	size_t used because size and count cant be < 0*/
-	size_t count;
+	int size;	/*	size_t used because size and count cant be < 0*/
+	int count;
 };
 
 typedef struct Queue Queue;
+
+struct activation_stask
+{
+	char * name;
+	int offset;
+	Queue q;
+};
+
+struct activation_stask as[999];
+
+
 
 void queue_init(Queue* queue)
 {
@@ -66,18 +80,6 @@ void queue_free(Queue* queue)
 }
 
 
- 
-char* queue_top(Queue*);
-char* queue_pop(Queue*);
-void queue_free(Queue*);
-
-struct activation_stask
-{
-	char * name;
-	int offset;
-	Queue q;
-};
-struct activation_stask as[999];
 
 void activate(char *name, int arg)
 {
