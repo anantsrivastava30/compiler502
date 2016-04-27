@@ -8,6 +8,7 @@
 #include <string.h>			/* for strdup */
 /*#include <stdlib.h> */	/* for atoi */
 #include "flash.tab.h" 	/* for token definitions and yylval */
+
 %}
 /*=========================================================================
 							TOKEN Definitions
@@ -16,6 +17,7 @@ DIGIT	[0-9]
 ID		[a-z][a-z0-9]*
 BOOL	[t][r][u][e]|[f][a][l][s][e]
 STRIN	[\"][A-Za-z0-9\*\-\^\!\@\#\$\%\&\(\)\.\:\;\,\ ]+[\"]
+%option yylineno
 /*=========================================================================
 	REGULAR EXPRESSIONS defining the tokens for the Simple language
 =========================================================================*/

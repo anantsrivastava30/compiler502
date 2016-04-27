@@ -1,52 +1,8 @@
 /***************************************************************************
 								Stack Machine
 ***************************************************************************/
-/*=========================================================================
-								DECLARATIONS
-=========================================================================*/
-/* OPERATIONS: Internal Representation */
 
-enum code_ops { HALT, STORE, JMP_FALSE, GOTO,
-				DATA, LD_INT, LD_VAR, LD_BOL, LD_STR,
-				FUN_INIT, FUN_EN, POP, FUN_CALL,
-				PARA_INT, PARA_BOOL, PARA_STR,
-				READ_INT, WRITE_INT,
-				READ_BOL, WRITE_BOL,
-				READ_STR, WRITE_STR,
-				LT, EQ, GT, ADD, SUB, MULT, DIV, PWR, DEF, ADD_STR,
-				ADDSTK, REMSTK,
-				GTEQ, LTEQ};
-			
-/* OPERATIONS: External Representation */
 
-char *op_name[] = {"halt", "store", "jmp_false", "goto",
-					"data", "ld_int", "ld_var", "ld_bol", "ld_str",
-					"fun_init", "fun_end", "pop","call",
-					"para_int", "para_bol", "para_str",
-					"in_int", "out_int",
-					"in_bol", "out_bol",
-					"in_str", "out_str",
-					"lt", "eq", "gt", "add", "sub", "mult", "div", "pwr", "def", "add_str",
-					"addstk", "remstk",
-					"gteq", "lteq"};
-struct instruction
-{
-	enum code_ops op;
-	int arg;
-	char * name;
-};
-
-/* CODE Array */
-
-struct instruction code[999];
-
-/* RUN-TIME Stack */
-
-int stack[999];
-
-/*-------------------------------------------------------------------------
-								Registers
--------------------------------------------------------------------------*/
 int pc = 0;
 struct instruction ir;
 int ar = 0;

@@ -4,7 +4,7 @@ flash.tab.c flash.tab.h: flash.y
 lex.yy.c: flash.lex flash.tab.h
 	flex flash.lex
 flash: flash.tab.c lex.yy.c
-	gcc -c flash.tab.c lex.yy.c
+	gcc -c queue.c flash.tab.c lex.yy.c 
 all: lex.yy.c flash.tab.c CG.h ST.h
 	gcc -o flash flash.tab.o lex.yy.o -lm
 	

@@ -79,10 +79,10 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-#line 99 "flash.y" /* yacc.c:1909  */
+#line 133 "flash.y" /* yacc.c:1909  */
 union semrec
 {
-#line 100 "flash.y" /* yacc.c:1909  */
+#line 134 "flash.y" /* yacc.c:1909  */
 
 int	intval;								/* Integer value */
 char *id;								/* Identifiers	*/
@@ -92,7 +92,7 @@ char *strval;
 
 #line 94 "flash.tab.h" /* yacc.c:1909  */
 };
-#line 99 "flash.y" /* yacc.c:1909  */
+#line 133 "flash.y" /* yacc.c:1909  */
 typedef union semrec YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

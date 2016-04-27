@@ -4,6 +4,8 @@
 /*=========================================================================
 	C Libraries, Symbol Table, Code Generator & other C code
 =========================================================================*/
+#include<memory.h>
+
 #include <stdio.h>
 /* For I/O																*/
 #include <stdlib.h>
@@ -16,13 +18,18 @@
 /* Stack Machine														*/
 #include "CG.h"
 /* Code Generator														*/
+#include "queue.h"
+/* For formal parameters and arguments type check						*/
 #define YYDEBUG 1
 /* For Debugging														*/
 int errors;
+extern int yylineno;
 /* Error Count*/
 /*-------------------------------------------------------------------------
 				The following supports a block structure
 -------------------------------------------------------------------------*/
+int fun_offset = 0;
+int arg_offset = 0; 
 int block_offset = 0;
 int block_in()
 {
@@ -35,15 +42,6 @@ int reset_block()
 /*-------------------------------------------------------------------------
 				The following support backpatching
 -------------------------------------------------------------------------*/
-int block_offset = 0;
-int block_in()
-{
-  block_offset = block_offset + 1;
-}
-int reset_block()
-{
-  block_offset = 0;
-}
 struct lbs
 /* Labels for data, if and while*/
 {
@@ -79,30 +77,55 @@ context_check( enum code_ops operation, char *sym_name ,int type)
 	identifier = getsym( sym_name );
 	if ( identifier == 0 ) { 
 		errors++;
-		printf( "%s", sym_name );
-		printf( "%s\n", " is an undeclared identifier" );
+		yyerror( strcat(sym_name," is an undeclared identifier") );
 		}
 	else if (type != -1 && identifier->type != type) {
-		printf( "%s", sym_name );
-		printf( "%s\n", " type error!" );
+		yyerror( strcat(sym_name," type error!") );
 		}
 	else gen_code( operation, identifier->offset );
 }
 
 context_check_fun( enum code_ops operation, char *sym_name ,int type)		
 {   symrec *identifier;		
-	identifier = getsym( sym_name );		
+	identifier = getsym( sym_name );
+	fun_offset = identifier->block_offset;		
 	if ( identifier == 0 ) { 		
 		errors++;		
-		printf( "%s", sym_name );		
-		printf( "%s\n", " is an undeclared identifier" );		
+		yyerror( strcat(sym_name," is an undeclared identifier") );	
 		}		
 	else if (type != -1 && identifier->type != type) {		
-		printf( "%s", sym_name );		
-		printf( "%s\n", " type error!" );		
+		yyerror( strcat(sym_name," type error!") );	
 		}		
 	else gen_fun( operation, identifier->name );		
 }
+
+argument_check(char* sym_name)
+{
+	
+	symrec *identifier;		
+	identifier = getsym( sym_name );
+	int n = as[fun_offset-1].q.count;
+	printf("%s\n",as[fun_offset-1].q.element[n-1]);
+	if ( identifier == 0 ) { 
+		errors++;
+		yyerror( strcat(sym_name," is an undeclared identifier") );
+		}
+	else {
+		/*for(int i=0; i < n;i++) {
+			if (!strcmp(as[fun_offset-1].q.element[i],"PARA_INT")
+				&&	identifier->type != 1 )
+				yyerror( strcat(sym_name," parameter type mismatch!") );
+			else if (strcmp(as[fun_offset-1].q.element[i],"PARA_BOOL")
+				&&	identifier->type != 0 )
+				yyerror( strcat(sym_name," parameter type mismatch!") );
+			else if (strcmp(as[fun_offset-1].q.element[i],"PARA_STR")
+				&&	identifier->type != 2 )
+				yyerror( strcat(sym_name," parameter type mismatch!") );
+			}*/
+		}
+	gen_code( ARG, identifier->offset );
+}	
+
 /*=========================================================================
 							SEMANTIC RECORDS
 =========================================================================*/
@@ -141,7 +164,8 @@ char *strval;
 program : 	LET
 				declaration
 				functions
-			IN	{	gen_code( DATA, data_location() - 1 );		}
+			IN	{	gen_code( DATA, data_location() - 1 );
+					reset_block();								}
 				commands
 			END {	gen_code( HALT, 0 ); YYACCEPT;				}
 ;
@@ -178,6 +202,7 @@ fun : FUN IDENTIFIER
 		block_in(); 						/*	increment block scope  */
 		gen_fun( FUN_INIT, $2); 
 		install($2, 3, block_offset); 
+		activate($2, block_offset);
 	} 
 	'(' parameter ')' 
 	declaration
@@ -185,6 +210,7 @@ fun : FUN IDENTIFIER
     END_FUN 
     { 
     	gen_code( FUN_EN, 0); 
+		deactivate(block_offset);
     } 
 ;
 parameter : /* empty */ 
@@ -194,29 +220,34 @@ parameters : SKIP
 	| INTEGER IDENTIFIER ';' 
 	{	
 		install( $2 , 1, block_offset );
-		context_check(PARA_INT , $2, -1);					
+		context_check(PARA_INT , $2, -1);
+		add_para_to_as(block_offset,"PARA_INT");					
 	}
 	| BOOLE IDENTIFIER ';' 
 	{	
 		install( $2 , 0, block_offset );
-		context_check(PARA_BOOL , $2, -1);					
+		context_check(PARA_BOOL , $2, -1);	
+		add_para_to_as(block_offset,"PARA_BOOL");				
 	}
 	| STR IDENTIFIER ';' 
 	{	
 		install( $2 , 2, block_offset );
-		context_check(PARA_STR , $2, -1);					
+		context_check(PARA_STR , $2, -1);
+		add_para_to_as(block_offset,"PARA_STR");					
 	}
 ;
 arguments : /* empty */
 	| argument IDENTIFIER	
 	{ 
-		context_check(PARA_INT , $2,-1);				
+		argument_check($2);
+		arg_offset++;				
 	}
 ;
 argument : /* empty */
 	| argument IDENTIFIER ','
 	{	
-		context_check(PARA_INT , $2,-1);			
+		argument_check($2);
+		arg_offset++;			
 	}
 ;
 
@@ -257,10 +288,16 @@ command : SKIP
 	{ 
 		context_check( POP, $2 ,-1); 						
 	}
-	| CALL IDENTIFIER'(' arguments ')' 
+	| CALL IDENTIFIER
 	{ 
 		context_check_fun(FUN_CALL, $2, 3);		
 	}
+	'(' arguments ')'
+	{
+		if(arg_offset != as[fun_offset-1].q.count)
+		yyerror( " Number of parameters don't match!");
+		arg_offset = 0;		
+	} 
 	| READ IDENTIFIER 
 	{    
 		context_check( READ_INT, $2 , 1);				
@@ -429,6 +466,7 @@ YYERROR
 yyerror ( char *s ) /* Called by yyparse on error */
 {
 errors++;
-printf ("%s\n", s);
+printf ("Line : %d -- Error in Semantics : %s \n", yylineno, s);
+exit(1);
 }
 /**************************** End Grammar File ***************************/
