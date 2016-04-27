@@ -1,13 +1,12 @@
 %{/*************************************************************************
-Compiler for the Simple language
+			Compiler for the Flash language
 ***************************************************************************/
 /*=========================================================================
-C Libraries, Symbol Table, Code Generator & other C code
+	C Libraries, Symbol Table, Code Generator & other C code
 =========================================================================*/
 #include <stdio.h>
 /* For I/O																*/
 #include <stdlib.h>
-
 /* For malloc here and in symbol table									*/
 #include <string.h>
 /* For strcmp in symbol table											*/
@@ -22,16 +21,28 @@ C Libraries, Symbol Table, Code Generator & other C code
 int errors;
 /* Error Count*/
 /*-------------------------------------------------------------------------
+				The following supports a block structure
+-------------------------------------------------------------------------*/
+int block_offset = 0;
+int block_in()
+{
+  block_offset = block_offset + 1;
+}
+int reset_block()
+{
+  block_offset = 0;
+}
+/*-------------------------------------------------------------------------
 				The following support backpatching
 -------------------------------------------------------------------------*/
 int block_offset = 0;
 int block_in()
 {
- return block_offset++;
+  block_offset = block_offset + 1;
 }
-int block_out()
+int reset_block()
 {
- return block_offset++;
+  block_offset = 0;
 }
 struct lbs
 /* Labels for data, if and while*/
@@ -57,7 +68,7 @@ install ( char *sym_name ,int type, int block)
 		s = putsym (sym_name,type, block);
 	}
 	else { errors++;
-		printf( "%s is already defined\n", sym_name );
+		yyerror( strcat(sym_name, " is already defined") );
 	}
 }
 /*-------------------------------------------------------------------------
@@ -130,114 +141,240 @@ char *strval;
 program : 	LET
 				declaration
 				functions
-			IN	{	gen_code( DATA, data_location() - 1 );				}
+			IN	{	gen_code( DATA, data_location() - 1 );		}
 				commands
-			END {	gen_code( HALT, 0 ); YYACCEPT;						}
+			END {	gen_code( HALT, 0 ); YYACCEPT;				}
 ;
 declaration : /* empty*/
 	| declaration declarations
 ;	
 declarations : SKIP
-	| INTEGER id_seqi IDENTIFIER ';' {	install( $3 , 1, block_offset);  gen_code_bool_str(DEF, "0");}
-	| BOOLE id_seqb IDENTIFIER ';' {	install( $3 , 0, block_offset);  gen_code_bool_str(DEF, "true");}
-	| STR id_seqs IDENTIFIER ';' {	install( $3 , 2, block_offset);  gen_code_bool_str(DEF, "str");}
-	| STACK IDENTIFIER ';' { install($2, 4, block_offset); gen_code_bool_str(DEF, "stk");  }
+	| INTEGER id_seqi IDENTIFIER ';' 
+	{	
+		install( $3 , 1, block_offset);  
+		gen_code_bool_str(DEF, "0");
+	}
+	| BOOLE id_seqb IDENTIFIER ';' 
+	{	
+		install( $3 , 0, block_offset);  
+		gen_code_bool_str(DEF, "true");
+	}
+	| STR id_seqs IDENTIFIER ';' 	
+	{	
+		install( $3 , 2, block_offset);  
+		gen_code_bool_str(DEF, "str");
+	}
+	| STACK IDENTIFIER ';' 
+	{ 
+		install($2, 4, block_offset); 
+		gen_code_bool_str(DEF, "stk");  
+	}
 ;
 functions : /* empty */
 	| functions fun
 ;
-fun : FUN IDENTIFIER { block_in(); gen_fun( FUN_INIT, $2); install($2, 3, block_offset); } 
-		'(' parameter ')' 
-		declaration
-		commands
-      END_FUN { gen_code( FUN_EN, 0); block_out(); } 
+fun : FUN IDENTIFIER 
+	{ 
+		block_in(); 						/*	increment block scope  */
+		gen_fun( FUN_INIT, $2); 
+		install($2, 3, block_offset); 
+	} 
+	'(' parameter ')' 
+	declaration
+	commands
+    END_FUN 
+    { 
+    	gen_code( FUN_EN, 0); 
+    } 
 ;
 parameter : /* empty */ 
 	| parameter parameters
 ;
 parameters : SKIP
-	| INTEGER IDENTIFIER ';' {	install( $2 , 1, block_offset );context_check(PARA_INT , $2, -1);					}
-	| BOOLE IDENTIFIER ';' {	install( $2 , 0, block_offset );context_check(PARA_BOOL , $2, -1);					}
-	| STR IDENTIFIER ';' {	install( $2 , 2, block_offset );context_check(PARA_STR , $2, -1);						}
+	| INTEGER IDENTIFIER ';' 
+	{	
+		install( $2 , 1, block_offset );
+		context_check(PARA_INT , $2, -1);					
+	}
+	| BOOLE IDENTIFIER ';' 
+	{	
+		install( $2 , 0, block_offset );
+		context_check(PARA_BOOL , $2, -1);					
+	}
+	| STR IDENTIFIER ';' 
+	{	
+		install( $2 , 2, block_offset );
+		context_check(PARA_STR , $2, -1);					
+	}
 ;
 arguments : /* empty */
-	| argument IDENTIFIER	{ context_check(PARA_INT , $2,-1);				}
+	| argument IDENTIFIER	
+	{ 
+		context_check(PARA_INT , $2,-1);				
+	}
 ;
 argument : /* empty */
-	| argument IDENTIFIER ',' {	context_check(PARA_INT , $2,-1);			}
+	| argument IDENTIFIER ','
+	{	
+		context_check(PARA_INT , $2,-1);			
+	}
 ;
 
 id_seqi : /* empty */
-	| id_seqi IDENTIFIER ',' {	install( $2 , 1, block_offset); gen_code_bool_str(DEF, "0");			}
+	| id_seqi IDENTIFIER ',' 
+	{	
+		install( $2 , 1, block_offset); 
+		gen_code_bool_str(DEF, "0");			
+	}
 ;
 id_seqb : /* empty */
-	| id_seqb IDENTIFIER ',' {	install( $2 , 0, block_offset); gen_code_bool_str(DEF, "true");			}
+	| id_seqb IDENTIFIER ',' 
+	{	
+		install( $2 , 0, block_offset);
+		gen_code_bool_str(DEF, "true");			
+	}
 ;
 id_seqs : /* empty */
-	| id_seqs IDENTIFIER ',' {	install( $2 , 2, block_offset); gen_code_bool_str(DEF, "str");			}
+	| id_seqs IDENTIFIER ',' 
+	{	
+		install( $2 , 2, block_offset);
+		gen_code_bool_str(DEF, "str");			
+	}
 ;
 commands : /* empty */
 	| commands command ';'
 ;
 command : SKIP
-	| IDENTIFIER ONTO '<' exp_int '>' { context_check(ADDSTK, $1, 4);      }
-	| IDENTIFIER OUTFROM '<' exp_int '>' { context_check(REMSTK, $1, 4);      }
-	| RETURN IDENTIFIER { context_check( POP, $2 ,-1); 						}
-	| CALL IDENTIFIER'(' arguments ')' { context_check_fun(FUN_CALL, $2, 3);		}
-	| READ IDENTIFIER {    context_check( READ_INT, $2 , 1);				}
-	| READ '#' IDENTIFIER {    context_check( READ_BOL, $3 , 0);			}
-	| READ '@' IDENTIFIER {    context_check( READ_STR, $3 , 2);			}
-	| WRITE exp_int {	gen_code( WRITE_INT, 1 );							}
-	| WRITE '#' exp_bol {	gen_code( WRITE_BOL, 0 );						}
-	| WRITE '@' exp_str {	gen_code( WRITE_STR, 2 );						}
-	| IDENTIFIER ASSGNOP exp_int { context_check( STORE, $1 , 1);   		}
-	| IDENTIFIER ASSGNOP exp_bol { context_check( STORE, $1 , 0);   		}
-	| IDENTIFIER ASSGNOP exp_str { context_check( STORE, $1 , 2);   		}	
-	| IF exp_int	{	$1 = (struct lbs *) newlblrec();
-					$1->for_jmp_false = reserve_loc(); 					}
-	  THEN commands	{ $1->for_goto = reserve_loc(); 					}
-	  ELSE			{ back_patch( $1->for_jmp_false,
-							JMP_FALSE,
-							gen_label() ); 								}
-
-		commands
-	  FI		{ back_patch( $1->for_goto, GOTO, gen_label() ); 		}	
-	| WHILE		{ $1 = (struct lbs *) newlblrec();
-				  $1->for_goto = gen_label(); 							}
-
-
-		exp_int		{ $1->for_jmp_false = reserve_loc();					}
-
+	| IDENTIFIER ONTO '<' exp_int '>' 
+	{ 
+		context_check(ADDSTK, $1, 4);      
+	}
+	| IDENTIFIER OUTFROM '<' exp_int '>' 
+	{ 
+		context_check(REMSTK, $1, 4);      
+	}
+	| RETURN IDENTIFIER 
+	{ 
+		context_check( POP, $2 ,-1); 						
+	}
+	| CALL IDENTIFIER'(' arguments ')' 
+	{ 
+		context_check_fun(FUN_CALL, $2, 3);		
+	}
+	| READ IDENTIFIER 
+	{    
+		context_check( READ_INT, $2 , 1);				
+	}
+	| READ '#' IDENTIFIER 
+	{    
+		context_check( READ_BOL, $3 , 0);			
+	}
+	| READ '@' IDENTIFIER 
+	{    
+		context_check( READ_STR, $3 , 2);			
+	}
+	| WRITE exp_int 
+	{	
+		gen_code( WRITE_INT, 1 );							
+	}
+	| WRITE '#' exp_bol 
+	{	
+		gen_code( WRITE_BOL, 0 );						
+	}
+	| WRITE '@' exp_str 
+	{	
+		gen_code( WRITE_STR, 2 );						
+	}
+	| IDENTIFIER ASSGNOP exp_int
+	{ 
+		context_check( STORE, $1 , 1);   		
+	}
+	| IDENTIFIER ASSGNOP exp_bol 
+	{ 
+		context_check( STORE, $1 , 0);   		
+	}
+	| IDENTIFIER ASSGNOP exp_str 
+	{ 
+		context_check( STORE, $1 , 2);   		
+	}	
+	/*=========================================================================
+								IF EXPRESSION FOR INTEGER
+	=========================================================================*/
+	| IF exp_int	
+	{	
+		$1 = (struct lbs *) newlblrec();
+		$1->for_jmp_false = reserve_loc(); 					
+	}
+	THEN commands	
+	{ 
+		$1->for_goto = reserve_loc(); 					
+	}
+	ELSE			
+	{
+		back_patch( $1->for_jmp_false, JMP_FALSE,gen_label() ); 								
+	}
+	commands
+	FI		
+	{ 
+	  	back_patch( $1->for_goto, GOTO, gen_label() ); 		
+	}	
+	| WHILE		
+	{ 
+		$1 = (struct lbs *) newlblrec();
+		$1->for_goto = gen_label(); 							
+	}
+	exp_int		
+	{ 
+		$1->for_jmp_false = reserve_loc();					
+	}
 	DO
 		commands
-	END			{ gen_code( GOTO, $1->for_goto );
-				  back_patch( $1->for_jmp_false,
-						JMP_FALSE,
-						gen_label() );									}
-	| IF exp_bol	{	$1 = (struct lbs *) newlblrec();
-					$1->for_jmp_false = reserve_loc(); 					}
-	  THEN commands	{ $1->for_goto = reserve_loc(); 					}
-	  ELSE			{ back_patch( $1->for_jmp_false,
-							JMP_FALSE,
-							gen_label() ); 								}
-
-		commands
-	  FI		{ back_patch( $1->for_goto, GOTO, gen_label() ); 		}	
-	| WHILE		{ $1 = (struct lbs *) newlblrec();
-				  $1->for_goto = gen_label(); 							}
-
-
-		exp_bol		{ $1->for_jmp_false = reserve_loc();					}
-
+	END			
+	{ 
+		gen_code( GOTO, $1->for_goto );
+		back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() );									
+	}
+	/*=========================================================================
+							IF EXPRESSION FOR BOOLEAN
+	=========================================================================*/
+	
+	| IF exp_bol	
+	{	
+		$1 = (struct lbs *) newlblrec();
+		$1->for_jmp_false = reserve_loc(); 					
+	}
+	THEN commands	
+	{
+		$1->for_goto = reserve_loc(); 					
+	}
+	ELSE			
+	{ 
+		back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); 								
+	}
+	commands
+	FI		
+	{ 
+		back_patch( $1->for_goto, GOTO, gen_label() ); 		
+	}	
+	| WHILE		
+	{ 
+		$1 = (struct lbs *) newlblrec();
+		$1->for_goto = gen_label(); 							
+	}
+	exp_bol		
+	{ 
+		$1->for_jmp_false = reserve_loc();			
+	}
 	DO
-		commands
-	END			{ gen_code( GOTO, $1->for_goto );
-				  back_patch( $1->for_jmp_false,
-						JMP_FALSE,
-						gen_label() );									}
+	commands
+	END			
+	{ 
+		gen_code( GOTO, $1->for_goto );
+		back_patch( $1->for_jmp_false,JMP_FALSE,gen_label() );									
+	}
 ;
-exp_int : NUMBER		{ gen_code( LD_INT, $1 );							}
-	| IDENTIFIER	{ context_check( LD_VAR, $1 , -1);						}
+exp_int : NUMBER			{ gen_code( LD_INT, $1 );							}
+	| IDENTIFIER			{ context_check( LD_VAR, $1 , -1);					}
 	| exp_int '<' exp_int	{ gen_code( LT, 0 );								}
 	| exp_int '=' exp_int	{ gen_code( EQ, 0 );								}
 	| exp_int '>' exp_int	{ gen_code( GT, 0 );								}
@@ -250,12 +387,12 @@ exp_int : NUMBER		{ gen_code( LD_INT, $1 );							}
 	| exp_int '^' exp_int	{ gen_code( PWR, 0 );								}
 	| '(' exp_int ')'
 ;
-exp_bol :  BOOLEAN		{ gen_code_bool_str( LD_BOL, $1 );							}
-	| IDENTIFIER	{ context_check( LD_VAR, $1 ,-1);							}
+exp_bol :  BOOLEAN			{ gen_code_bool_str( LD_BOL, $1 );					}
+	| IDENTIFIER			{ context_check( LD_VAR, $1 ,-1);					}
 ;
-exp_str :  STRING		{ gen_code_bool_str( LD_STR, $1 );							}
-	| IDENTIFIER	{ context_check( LD_VAR, $1 ,-1);							}
-	| exp_str '.' exp_str { gen_code(ADD_STR, 0);								}  
+exp_str :  STRING			{ gen_code_bool_str( LD_STR, $1 );					}
+	| IDENTIFIER			{ context_check( LD_VAR, $1 ,-1);					}
+	| exp_str '.' exp_str 	{ gen_code(ADD_STR, 0);								}  
 ;
 %%
 /*=========================================================================

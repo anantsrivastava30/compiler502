@@ -92,11 +92,11 @@ int errors;
 int block_offset = 0;
 int block_in()
 {
- return block_offset++;
+  block_offset = block_offset + 1;
 }
-int block_out()
+int reset_block()
 {
- return block_offset++;
+  block_offset = 0;
 }
 struct lbs
 /* Labels for data, if and while*/
@@ -122,7 +122,7 @@ install ( char *sym_name ,int type, int block)
 		s = putsym (sym_name,type, block);
 	}
 	else { errors++;
-		printf( "%s is already defined\n", sym_name );
+		yyerror( strcat(sym_name, " is already defined") );
 	}
 }
 /*-------------------------------------------------------------------------
@@ -558,14 +558,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   133,   133,   130,   137,   138,   140,   141,   142,   143,
-     144,   146,   147,   149,   149,   155,   156,   158,   159,   160,
-     161,   163,   164,   166,   167,   170,   171,   173,   174,   176,
-     177,   179,   180,   182,   183,   184,   185,   186,   187,   188,
-     189,   190,   191,   192,   193,   194,   195,   196,   198,   199,
-     196,   205,   209,   205,   217,   219,   220,   217,   226,   230,
-     226,   239,   240,   241,   242,   243,   244,   245,   246,   247,
-     248,   249,   250,   251,   253,   254,   256,   257,   258
+       0,   133,   133,   130,   137,   138,   140,   141,   146,   151,
+     156,   162,   163,   166,   165,   179,   180,   182,   183,   188,
+     193,   199,   200,   205,   206,   212,   213,   219,   220,   226,
+     227,   233,   234,   236,   237,   241,   245,   249,   253,   257,
+     261,   265,   269,   273,   277,   281,   285,   293,   298,   302,
+     292,   311,   316,   310,   331,   336,   340,   330,   349,   354,
+     348,   365,   366,   367,   368,   369,   370,   371,   372,   373,
+     374,   375,   376,   377,   379,   380,   382,   383,   384
 };
 #endif
 
@@ -1455,7 +1455,7 @@ yyreduce:
     {
         case 2:
 #line 133 "flash.y" /* yacc.c:1646  */
-    {	gen_code( DATA, data_location() - 1 );				}
+    {	gen_code( DATA, data_location() - 1 );		}
 #line 1460 "flash.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1466,369 +1466,455 @@ yyreduce:
     break;
 
   case 7:
-#line 141 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 1, block_offset);  gen_code_bool_str(DEF, "0");}
-#line 1472 "flash.tab.c" /* yacc.c:1646  */
+#line 142 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 1, block_offset);  
+		gen_code_bool_str(DEF, "0");
+	}
+#line 1475 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 142 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 0, block_offset);  gen_code_bool_str(DEF, "true");}
-#line 1478 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 143 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 2, block_offset);  gen_code_bool_str(DEF, "str");}
+#line 147 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 0, block_offset);  
+		gen_code_bool_str(DEF, "true");
+	}
 #line 1484 "flash.tab.c" /* yacc.c:1646  */
     break;
 
+  case 9:
+#line 152 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 2, block_offset);  
+		gen_code_bool_str(DEF, "str");
+	}
+#line 1493 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
   case 10:
-#line 144 "flash.y" /* yacc.c:1646  */
-    { install((yyvsp[-1].id), 4, block_offset); gen_code_bool_str(DEF, "stk");  }
-#line 1490 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 149 "flash.y" /* yacc.c:1646  */
-    { block_in(); gen_fun( FUN_INIT, (yyvsp[0].id)); install((yyvsp[0].id), 3, block_offset); }
-#line 1496 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 14:
-#line 153 "flash.y" /* yacc.c:1646  */
-    { gen_code( FUN_EN, 0); block_out(); }
+#line 157 "flash.y" /* yacc.c:1646  */
+    { 
+		install((yyvsp[-1].id), 4, block_offset); 
+		gen_code_bool_str(DEF, "stk");  
+	}
 #line 1502 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 159 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 1, block_offset );context_check(PARA_INT , (yyvsp[-1].id), -1);					}
-#line 1508 "flash.tab.c" /* yacc.c:1646  */
+  case 13:
+#line 166 "flash.y" /* yacc.c:1646  */
+    { 
+		block_in(); 
+		gen_fun( FUN_INIT, (yyvsp[0].id)); 
+		install((yyvsp[0].id), 3, block_offset); 
+	}
+#line 1512 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 160 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 0, block_offset );context_check(PARA_BOOL , (yyvsp[-1].id), -1);					}
-#line 1514 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 20:
-#line 161 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 2, block_offset );context_check(PARA_STR , (yyvsp[-1].id), -1);						}
+  case 14:
+#line 175 "flash.y" /* yacc.c:1646  */
+    { 
+    	gen_code( FUN_EN, 0); 
+    }
 #line 1520 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 164 "flash.y" /* yacc.c:1646  */
-    { context_check(PARA_INT , (yyvsp[0].id),-1);				}
-#line 1526 "flash.tab.c" /* yacc.c:1646  */
+  case 18:
+#line 184 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 1, block_offset );
+		context_check(PARA_INT , (yyvsp[-1].id), -1);					
+	}
+#line 1529 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 167 "flash.y" /* yacc.c:1646  */
-    {	context_check(PARA_INT , (yyvsp[-1].id),-1);			}
-#line 1532 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 26:
-#line 171 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 1, block_offset); gen_code_bool_str(DEF, "0");			}
+  case 19:
+#line 189 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 0, block_offset );
+		context_check(PARA_BOOL , (yyvsp[-1].id), -1);					
+	}
 #line 1538 "flash.tab.c" /* yacc.c:1646  */
     break;
 
+  case 20:
+#line 194 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 2, block_offset );
+		context_check(PARA_STR , (yyvsp[-1].id), -1);					
+	}
+#line 1547 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 201 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check(PARA_INT , (yyvsp[0].id),-1);				
+	}
+#line 1555 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 207 "flash.y" /* yacc.c:1646  */
+    {	
+		context_check(PARA_INT , (yyvsp[-1].id),-1);			
+	}
+#line 1563 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 214 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 1, block_offset); 
+		gen_code_bool_str(DEF, "0");			
+	}
+#line 1572 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
   case 28:
-#line 174 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 0, block_offset); gen_code_bool_str(DEF, "true");			}
-#line 1544 "flash.tab.c" /* yacc.c:1646  */
+#line 221 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 0, block_offset);
+		gen_code_bool_str(DEF, "true");			
+	}
+#line 1581 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 177 "flash.y" /* yacc.c:1646  */
-    {	install( (yyvsp[-1].id) , 2, block_offset); gen_code_bool_str(DEF, "str");			}
-#line 1550 "flash.tab.c" /* yacc.c:1646  */
+#line 228 "flash.y" /* yacc.c:1646  */
+    {	
+		install( (yyvsp[-1].id) , 2, block_offset);
+		gen_code_bool_str(DEF, "str");			
+	}
+#line 1590 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 183 "flash.y" /* yacc.c:1646  */
-    { context_check(ADDSTK, (yyvsp[-4].id), 4);      }
-#line 1556 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 35:
-#line 184 "flash.y" /* yacc.c:1646  */
-    { context_check(REMSTK, (yyvsp[-4].id), 4);      }
-#line 1562 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 36:
-#line 185 "flash.y" /* yacc.c:1646  */
-    { context_check( POP, (yyvsp[0].id) ,-1); 						}
-#line 1568 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 37:
-#line 186 "flash.y" /* yacc.c:1646  */
-    { context_check_fun(FUN_CALL, (yyvsp[-3].id), 3);		}
-#line 1574 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 38:
-#line 187 "flash.y" /* yacc.c:1646  */
-    {    context_check( READ_INT, (yyvsp[0].id) , 1);				}
-#line 1580 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 39:
-#line 188 "flash.y" /* yacc.c:1646  */
-    {    context_check( READ_BOL, (yyvsp[0].id) , 0);			}
-#line 1586 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 40:
-#line 189 "flash.y" /* yacc.c:1646  */
-    {    context_check( READ_STR, (yyvsp[0].id) , 2);			}
-#line 1592 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 41:
-#line 190 "flash.y" /* yacc.c:1646  */
-    {	gen_code( WRITE_INT, 1 );							}
+#line 238 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check(ADDSTK, (yyvsp[-4].id), 4);      
+	}
 #line 1598 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 42:
-#line 191 "flash.y" /* yacc.c:1646  */
-    {	gen_code( WRITE_BOL, 0 );						}
-#line 1604 "flash.tab.c" /* yacc.c:1646  */
+  case 35:
+#line 242 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check(REMSTK, (yyvsp[-4].id), 4);      
+	}
+#line 1606 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 43:
-#line 192 "flash.y" /* yacc.c:1646  */
-    {	gen_code( WRITE_STR, 2 );						}
-#line 1610 "flash.tab.c" /* yacc.c:1646  */
+  case 36:
+#line 246 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check( POP, (yyvsp[0].id) ,-1); 						
+	}
+#line 1614 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 44:
-#line 193 "flash.y" /* yacc.c:1646  */
-    { context_check( STORE, (yyvsp[-2].id) , 1);   		}
-#line 1616 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 45:
-#line 194 "flash.y" /* yacc.c:1646  */
-    { context_check( STORE, (yyvsp[-2].id) , 0);   		}
+  case 37:
+#line 250 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check_fun(FUN_CALL, (yyvsp[-3].id), 3);		
+	}
 #line 1622 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 46:
-#line 195 "flash.y" /* yacc.c:1646  */
-    { context_check( STORE, (yyvsp[-2].id) , 2);   		}
-#line 1628 "flash.tab.c" /* yacc.c:1646  */
+  case 38:
+#line 254 "flash.y" /* yacc.c:1646  */
+    {    
+		context_check( READ_INT, (yyvsp[0].id) , 1);				
+	}
+#line 1630 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 47:
-#line 196 "flash.y" /* yacc.c:1646  */
-    {	(yyvsp[-1].lbls) = (struct lbs *) newlblrec();
-					(yyvsp[-1].lbls)->for_jmp_false = reserve_loc(); 					}
-#line 1635 "flash.tab.c" /* yacc.c:1646  */
+  case 39:
+#line 258 "flash.y" /* yacc.c:1646  */
+    {    
+		context_check( READ_BOL, (yyvsp[0].id) , 0);			
+	}
+#line 1638 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 48:
-#line 198 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[-4].lbls)->for_goto = reserve_loc(); 					}
-#line 1641 "flash.tab.c" /* yacc.c:1646  */
+  case 40:
+#line 262 "flash.y" /* yacc.c:1646  */
+    {    
+		context_check( READ_STR, (yyvsp[0].id) , 2);			
+	}
+#line 1646 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 49:
-#line 199 "flash.y" /* yacc.c:1646  */
-    { back_patch( (yyvsp[-6].lbls)->for_jmp_false,
-							JMP_FALSE,
-							gen_label() ); 								}
-#line 1649 "flash.tab.c" /* yacc.c:1646  */
+  case 41:
+#line 266 "flash.y" /* yacc.c:1646  */
+    {	
+		gen_code( WRITE_INT, 1 );							
+	}
+#line 1654 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 50:
-#line 204 "flash.y" /* yacc.c:1646  */
-    { back_patch( (yyvsp[-9].lbls)->for_goto, GOTO, gen_label() ); 		}
-#line 1655 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 51:
-#line 205 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[0].lbls) = (struct lbs *) newlblrec();
-				  (yyvsp[0].lbls)->for_goto = gen_label(); 							}
+  case 42:
+#line 270 "flash.y" /* yacc.c:1646  */
+    {	
+		gen_code( WRITE_BOL, 0 );						
+	}
 #line 1662 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 52:
-#line 209 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[-2].lbls)->for_jmp_false = reserve_loc();					}
-#line 1668 "flash.tab.c" /* yacc.c:1646  */
+  case 43:
+#line 274 "flash.y" /* yacc.c:1646  */
+    {	
+		gen_code( WRITE_STR, 2 );						
+	}
+#line 1670 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 53:
-#line 213 "flash.y" /* yacc.c:1646  */
-    { gen_code( GOTO, (yyvsp[-6].lbls)->for_goto );
-				  back_patch( (yyvsp[-6].lbls)->for_jmp_false,
-						JMP_FALSE,
-						gen_label() );									}
-#line 1677 "flash.tab.c" /* yacc.c:1646  */
+  case 44:
+#line 278 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check( STORE, (yyvsp[-2].id) , 1);   		
+	}
+#line 1678 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 54:
-#line 217 "flash.y" /* yacc.c:1646  */
-    {	(yyvsp[-1].lbls) = (struct lbs *) newlblrec();
-					(yyvsp[-1].lbls)->for_jmp_false = reserve_loc(); 					}
-#line 1684 "flash.tab.c" /* yacc.c:1646  */
+  case 45:
+#line 282 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check( STORE, (yyvsp[-2].id) , 0);   		
+	}
+#line 1686 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 55:
-#line 219 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[-4].lbls)->for_goto = reserve_loc(); 					}
-#line 1690 "flash.tab.c" /* yacc.c:1646  */
+  case 46:
+#line 286 "flash.y" /* yacc.c:1646  */
+    { 
+		context_check( STORE, (yyvsp[-2].id) , 2);   		
+	}
+#line 1694 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 56:
-#line 220 "flash.y" /* yacc.c:1646  */
-    { back_patch( (yyvsp[-6].lbls)->for_jmp_false,
-							JMP_FALSE,
-							gen_label() ); 								}
-#line 1698 "flash.tab.c" /* yacc.c:1646  */
+  case 47:
+#line 293 "flash.y" /* yacc.c:1646  */
+    {	
+		(yyvsp[-1].lbls) = (struct lbs *) newlblrec();
+		(yyvsp[-1].lbls)->for_jmp_false = reserve_loc(); 					
+	}
+#line 1703 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 57:
-#line 225 "flash.y" /* yacc.c:1646  */
-    { back_patch( (yyvsp[-9].lbls)->for_goto, GOTO, gen_label() ); 		}
-#line 1704 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 58:
-#line 226 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[0].lbls) = (struct lbs *) newlblrec();
-				  (yyvsp[0].lbls)->for_goto = gen_label(); 							}
+  case 48:
+#line 298 "flash.y" /* yacc.c:1646  */
+    { 
+		(yyvsp[-4].lbls)->for_goto = reserve_loc(); 					
+	}
 #line 1711 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 59:
-#line 230 "flash.y" /* yacc.c:1646  */
-    { (yyvsp[-2].lbls)->for_jmp_false = reserve_loc();					}
-#line 1717 "flash.tab.c" /* yacc.c:1646  */
+  case 49:
+#line 302 "flash.y" /* yacc.c:1646  */
+    {
+		back_patch( (yyvsp[-6].lbls)->for_jmp_false, JMP_FALSE,gen_label() ); 								
+	}
+#line 1719 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 60:
-#line 234 "flash.y" /* yacc.c:1646  */
-    { gen_code( GOTO, (yyvsp[-6].lbls)->for_goto );
-				  back_patch( (yyvsp[-6].lbls)->for_jmp_false,
-						JMP_FALSE,
-						gen_label() );									}
-#line 1726 "flash.tab.c" /* yacc.c:1646  */
+  case 50:
+#line 307 "flash.y" /* yacc.c:1646  */
+    { 
+	  	back_patch( (yyvsp[-9].lbls)->for_goto, GOTO, gen_label() ); 		
+	}
+#line 1727 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 61:
-#line 239 "flash.y" /* yacc.c:1646  */
-    { gen_code( LD_INT, (yyvsp[0].intval) );							}
-#line 1732 "flash.tab.c" /* yacc.c:1646  */
+  case 51:
+#line 311 "flash.y" /* yacc.c:1646  */
+    { 
+		(yyvsp[0].lbls) = (struct lbs *) newlblrec();
+		(yyvsp[0].lbls)->for_goto = gen_label(); 							
+	}
+#line 1736 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 62:
-#line 240 "flash.y" /* yacc.c:1646  */
-    { context_check( LD_VAR, (yyvsp[0].id) , -1);						}
-#line 1738 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 63:
-#line 241 "flash.y" /* yacc.c:1646  */
-    { gen_code( LT, 0 );								}
+  case 52:
+#line 316 "flash.y" /* yacc.c:1646  */
+    { 
+		(yyvsp[-2].lbls)->for_jmp_false = reserve_loc();					
+	}
 #line 1744 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 64:
-#line 242 "flash.y" /* yacc.c:1646  */
-    { gen_code( EQ, 0 );								}
-#line 1750 "flash.tab.c" /* yacc.c:1646  */
+  case 53:
+#line 322 "flash.y" /* yacc.c:1646  */
+    { 
+		gen_code( GOTO, (yyvsp[-6].lbls)->for_goto );
+		back_patch( (yyvsp[-6].lbls)->for_jmp_false, JMP_FALSE, gen_label() );									
+	}
+#line 1753 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 65:
-#line 243 "flash.y" /* yacc.c:1646  */
-    { gen_code( GT, 0 );								}
-#line 1756 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 66:
-#line 244 "flash.y" /* yacc.c:1646  */
-    { gen_code( GTEQ, 0 );								}
+  case 54:
+#line 331 "flash.y" /* yacc.c:1646  */
+    {	
+		(yyvsp[-1].lbls) = (struct lbs *) newlblrec();
+		(yyvsp[-1].lbls)->for_jmp_false = reserve_loc(); 					
+	}
 #line 1762 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 67:
-#line 245 "flash.y" /* yacc.c:1646  */
-    { gen_code( LTEQ, 0 );								}
-#line 1768 "flash.tab.c" /* yacc.c:1646  */
+  case 55:
+#line 336 "flash.y" /* yacc.c:1646  */
+    {
+		(yyvsp[-4].lbls)->for_goto = reserve_loc(); 					
+	}
+#line 1770 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 68:
-#line 246 "flash.y" /* yacc.c:1646  */
-    { gen_code( ADD, 0 );								}
-#line 1774 "flash.tab.c" /* yacc.c:1646  */
+  case 56:
+#line 340 "flash.y" /* yacc.c:1646  */
+    { 
+		back_patch( (yyvsp[-6].lbls)->for_jmp_false, JMP_FALSE, gen_label() ); 								
+	}
+#line 1778 "flash.tab.c" /* yacc.c:1646  */
     break;
 
-  case 69:
-#line 247 "flash.y" /* yacc.c:1646  */
-    { gen_code( SUB, 0 );								}
-#line 1780 "flash.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 70:
-#line 248 "flash.y" /* yacc.c:1646  */
-    { gen_code( MULT, 0 );								}
+  case 57:
+#line 345 "flash.y" /* yacc.c:1646  */
+    { 
+		back_patch( (yyvsp[-9].lbls)->for_goto, GOTO, gen_label() ); 		
+	}
 #line 1786 "flash.tab.c" /* yacc.c:1646  */
     break;
 
+  case 58:
+#line 349 "flash.y" /* yacc.c:1646  */
+    { 
+		(yyvsp[0].lbls) = (struct lbs *) newlblrec();
+		(yyvsp[0].lbls)->for_goto = gen_label(); 							
+	}
+#line 1795 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 354 "flash.y" /* yacc.c:1646  */
+    { 
+		(yyvsp[-2].lbls)->for_jmp_false = reserve_loc();			
+	}
+#line 1803 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
+#line 360 "flash.y" /* yacc.c:1646  */
+    { 
+		gen_code( GOTO, (yyvsp[-6].lbls)->for_goto );
+		back_patch( (yyvsp[-6].lbls)->for_jmp_false,JMP_FALSE,gen_label() );									
+	}
+#line 1812 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 61:
+#line 365 "flash.y" /* yacc.c:1646  */
+    { gen_code( LD_INT, (yyvsp[0].intval) );							}
+#line 1818 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 366 "flash.y" /* yacc.c:1646  */
+    { context_check( LD_VAR, (yyvsp[0].id) , -1);					}
+#line 1824 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 63:
+#line 367 "flash.y" /* yacc.c:1646  */
+    { gen_code( LT, 0 );								}
+#line 1830 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 64:
+#line 368 "flash.y" /* yacc.c:1646  */
+    { gen_code( EQ, 0 );								}
+#line 1836 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 65:
+#line 369 "flash.y" /* yacc.c:1646  */
+    { gen_code( GT, 0 );								}
+#line 1842 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 370 "flash.y" /* yacc.c:1646  */
+    { gen_code( GTEQ, 0 );								}
+#line 1848 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 67:
+#line 371 "flash.y" /* yacc.c:1646  */
+    { gen_code( LTEQ, 0 );								}
+#line 1854 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 68:
+#line 372 "flash.y" /* yacc.c:1646  */
+    { gen_code( ADD, 0 );								}
+#line 1860 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 69:
+#line 373 "flash.y" /* yacc.c:1646  */
+    { gen_code( SUB, 0 );								}
+#line 1866 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 70:
+#line 374 "flash.y" /* yacc.c:1646  */
+    { gen_code( MULT, 0 );								}
+#line 1872 "flash.tab.c" /* yacc.c:1646  */
+    break;
+
   case 71:
-#line 249 "flash.y" /* yacc.c:1646  */
+#line 375 "flash.y" /* yacc.c:1646  */
     { gen_code( DIV, 0 );								}
-#line 1792 "flash.tab.c" /* yacc.c:1646  */
+#line 1878 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 250 "flash.y" /* yacc.c:1646  */
+#line 376 "flash.y" /* yacc.c:1646  */
     { gen_code( PWR, 0 );								}
-#line 1798 "flash.tab.c" /* yacc.c:1646  */
+#line 1884 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 253 "flash.y" /* yacc.c:1646  */
-    { gen_code_bool_str( LD_BOL, (yyvsp[0].boolval) );							}
-#line 1804 "flash.tab.c" /* yacc.c:1646  */
+#line 379 "flash.y" /* yacc.c:1646  */
+    { gen_code_bool_str( LD_BOL, (yyvsp[0].boolval) );					}
+#line 1890 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 254 "flash.y" /* yacc.c:1646  */
-    { context_check( LD_VAR, (yyvsp[0].id) ,-1);							}
-#line 1810 "flash.tab.c" /* yacc.c:1646  */
+#line 380 "flash.y" /* yacc.c:1646  */
+    { context_check( LD_VAR, (yyvsp[0].id) ,-1);					}
+#line 1896 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 256 "flash.y" /* yacc.c:1646  */
-    { gen_code_bool_str( LD_STR, (yyvsp[0].strval) );							}
-#line 1816 "flash.tab.c" /* yacc.c:1646  */
+#line 382 "flash.y" /* yacc.c:1646  */
+    { gen_code_bool_str( LD_STR, (yyvsp[0].strval) );					}
+#line 1902 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 257 "flash.y" /* yacc.c:1646  */
-    { context_check( LD_VAR, (yyvsp[0].id) ,-1);							}
-#line 1822 "flash.tab.c" /* yacc.c:1646  */
+#line 383 "flash.y" /* yacc.c:1646  */
+    { context_check( LD_VAR, (yyvsp[0].id) ,-1);					}
+#line 1908 "flash.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 258 "flash.y" /* yacc.c:1646  */
+#line 384 "flash.y" /* yacc.c:1646  */
     { gen_code(ADD_STR, 0);								}
-#line 1828 "flash.tab.c" /* yacc.c:1646  */
+#line 1914 "flash.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1832 "flash.tab.c" /* yacc.c:1646  */
+#line 1918 "flash.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2056,7 +2142,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 260 "flash.y" /* yacc.c:1906  */
+#line 386 "flash.y" /* yacc.c:1906  */
 
 /*=========================================================================
 MAIN
