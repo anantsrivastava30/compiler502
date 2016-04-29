@@ -27,6 +27,15 @@ void gen_code( enum code_ops operation, int arg )
   code[code_offset++].arg = arg;
 }
 
+void gen_code_def( enum code_ops operation,char *sym,  char *arg )
+{ code[code_offset].op = operation;
+  char *outFile = malloc(10);
+  strcpy(outFile, sym);
+  strcat(outFile, "%");
+  strcat(outFile, arg);
+  code[code_offset++].name = outFile;
+}
+
 void gen_code_bool_str( enum code_ops operation, char *arg )
 {
   code[code_offset].op = operation;
@@ -68,7 +77,30 @@ void print_code( FILE *fp )
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
-	else if( strcmp(op_name[(int) code[i].op],"call") == 0 ) {
+	else if( strcmp(op_name[(int) code[i].op],"call") == 0) {
+		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;
+	}
+	else if( strcmp(op_name[(int) code[i].op],"ld_var") == 0 || 
+				strcmp(op_name[(int) code[i].op],"addstk") == 0 || 
+				strcmp(op_name[(int) code[i].op],"remstk") == 0) {
+		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;
+	}
+	else if( strcmp(op_name[(int) code[i].op],"arg") == 0 || 
+				strcmp(op_name[(int) code[i].op],"store") == 0) {
+		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;
+	}
+	else if( strcmp(op_name[(int) code[i].op],"para_int") == 0 || 
+				strcmp(op_name[(int) code[i].op],"para_bool") == 0 || 
+				strcmp(op_name[(int) code[i].op],"para_str") == 0) {
+		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;
+	}
+	else if( strcmp(op_name[(int) code[i].op],"read_int") == 0 || 
+				strcmp(op_name[(int) code[i].op],"read_bool") == 0 || 
+				strcmp(op_name[(int) code[i].op],"read_str") == 0) {
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}

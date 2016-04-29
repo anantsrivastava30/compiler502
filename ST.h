@@ -18,7 +18,8 @@ enum code_ops { HALT, STORE, JMP_FALSE, GOTO,
 				READ_STR, WRITE_STR,
 				LT, EQ, GT, ADD, SUB, MULT, DIV, PWR, DEF, ADD_STR,
 				ADDSTK, REMSTK,
-				GTEQ, LTEQ};
+				GTEQ, LTEQ,
+				AND, OR};
 			
 /* OPERATIONS: External Representation */
 
@@ -31,7 +32,8 @@ char *op_name[] = {"halt", "store", "jmp_false", "goto",
 					"in_str", "out_str",
 					"lt", "eq", "gt", "add", "sub", "mult", "div", "pwr", "def", "add_str",
 					"addstk", "remstk",
-					"gteq", "lteq"};
+					"gteq", "lteq",
+					"and", "or"};
 
 
 /*-------------------------------------------------------------------------

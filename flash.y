@@ -82,7 +82,7 @@ context_check( enum code_ops operation, char *sym_name ,int type)
 	else if (type != -1 && identifier->type != type) {
 		yyerror( strcat(sym_name," type error!") );
 		}
-	else gen_code( operation, identifier->offset );
+	else gen_code_bool_str( operation, sym_name );
 }
 
 context_check_fun( enum code_ops operation, char *sym_name ,int type)		
@@ -118,7 +118,7 @@ argument_check(char* sym_name, int arg)
 			else if (!strcmp(checker,"PARA_STR")  &&	identifier->type != 2 )
 				yyerror( strcat(sym_name," parameter type mismatch!") );
 			}
-	gen_code( ARG, identifier->offset );
+	gen_code_bool_str( ARG, sym_name );
 }	
 
 /*=========================================================================
@@ -152,6 +152,8 @@ char *strval;
 %left '-' '+'
 %left '*' '/'
 %right '^'
+%left '|' '&'
+%left '='
 /*=========================================================================
 					GRAMMAR RULES for the Simple language
 =========================================================================*/
@@ -171,22 +173,22 @@ declarations : SKIP
 	| INTEGER id_seqi IDENTIFIER ';' 
 	{	
 		install( $3 , 1, block_offset);  
-		gen_code_bool_str(DEF, "0");
+		gen_code_def(DEF, $3, "0");
 	}
 	| BOOLE id_seqb IDENTIFIER ';' 
 	{	
 		install( $3 , 0, block_offset);  
-		gen_code_bool_str(DEF, "true");
+		gen_code_def(DEF, $3, "true");
 	}
 	| STR id_seqs IDENTIFIER ';' 	
 	{	
 		install( $3 , 2, block_offset);  
-		gen_code_bool_str(DEF, "str");
+		gen_code_def(DEF, $3, "str");
 	}
 	| STACK IDENTIFIER ';' 
 	{ 
 		install($2, 4, block_offset); 
-		gen_code_bool_str(DEF, "stk");  
+		gen_code_def(DEF, $2, "stk");  
 	}
 ;
 functions : /* empty */
@@ -252,21 +254,21 @@ id_seqi : /* empty */
 	| id_seqi IDENTIFIER ',' 
 	{	
 		install( $2 , 1, block_offset); 
-		gen_code_bool_str(DEF, "0");			
+		gen_code_def(DEF, $2 ,"0");			
 	}
 ;
 id_seqb : /* empty */
 	| id_seqb IDENTIFIER ',' 
 	{	
 		install( $2 , 0, block_offset);
-		gen_code_bool_str(DEF, "true");			
+		gen_code_def(DEF, $2, "true");			
 	}
 ;
 id_seqs : /* empty */
 	| id_seqs IDENTIFIER ',' 
 	{	
 		install( $2 , 2, block_offset);
-		gen_code_bool_str(DEF, "str");			
+		gen_code_def(DEF, $2 ,"str");			
 	}
 ;
 commands : /* empty */
@@ -277,13 +279,14 @@ command : SKIP
 	{ 
 		context_check(ADDSTK, $1, 4);      
 	}
-	| IDENTIFIER OUTFROM '<' exp_int '>' 
+	| IDENTIFIER ASSGNOP IDENTIFIER OUTFROM 
 	{ 
-		context_check(REMSTK, $1, 4);      
+		context_check(REMSTK, $3, 4); 
+		context_check(STORE, $1 , 1);     
 	}
-	| RETURN IDENTIFIER 
+	| RETURN exp_int 
 	{ 
-		context_check( POP, $2 ,-1); 						
+		gen_code(POP, 0); 						
 	}
 	| CALL IDENTIFIER
 	{ 
@@ -295,6 +298,17 @@ command : SKIP
 		yyerror( " Number of parameters don't match!");
 		arg_offset = 0;		
 	} 
+	| IDENTIFIER ASSGNOP CALL IDENTIFIER
+	{ 
+		context_check_fun(FUN_CALL, $4, 3);		
+	}
+	'(' arguments ')'
+	{
+		if(arg_offset != as[fun_offset-1].q.count)
+		yyerror( " Number of parameters don't match!");
+		arg_offset = 0;
+		context_check( STORE, $1 , 1);		
+	}
 	| READ IDENTIFIER 
 	{    
 		context_check( READ_INT, $2 , 1);				
@@ -419,6 +433,8 @@ exp_int : NUMBER			{ gen_code( LD_INT, $1 );							}
 	| exp_int '*' exp_int	{ gen_code( MULT, 0 );								}
 	| exp_int '/' exp_int	{ gen_code( DIV, 0 );								}
 	| exp_int '^' exp_int	{ gen_code( PWR, 0 );								}
+	| exp_int '|' exp_int	{ gen_code( OR, 0 );								}
+	| exp_int '&' exp_int	{ gen_code( AND, 0 );								}
 	| '(' exp_int ')'
 ;
 exp_bol :  BOOLEAN			{ gen_code_bool_str( LD_BOL, $1 );					}
