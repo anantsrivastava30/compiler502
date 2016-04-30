@@ -559,10 +559,26 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "flash.lex"
+/*=========================================================================
+TEAM : Team 31, Team Flash, Very Fast Much Wow.
+
+Members : Anant Srivastava
+		  Bharat Singh
+		  Wenbo Tian
+		  Vidyaabharathi Vasudevan
+
+Build Using : FLEX(2.6.0), BISON (GNU 3.0.4), C;		  
+
+References : Compiler Construction using Flex and Bison,
+						Anthony A. Aaby,
+			 		email :	aabyan@wwc.edu
+			 	  version of Feburary 25,2004.
+	OPEN PUBLIC LISCENCE : https://opencontent.org/openpub
+=========================================================================*/
 /***************************************************************************
 					Scanner for the Simple language
 ***************************************************************************/
-#line 5 "flash.lex"
+#line 21 "flash.lex"
 /*=========================================================================
 				C-libraries and Token definitions
 =========================================================================*/
@@ -576,7 +592,7 @@ char *yytext;
 /*=========================================================================
 	REGULAR EXPRESSIONS defining the tokens for the Simple language
 =========================================================================*/
-#line 580 "lex.yy.c"
+#line 596 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -794,9 +810,9 @@ YY_DECL
 		}
 
 	{
-#line 24 "flash.lex"
+#line 40 "flash.lex"
 
-#line 800 "lex.yy.c"
+#line 816 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -865,170 +881,170 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "flash.lex"
+#line 41 "flash.lex"
 { return(ASSGNOP); 	}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "flash.lex"
+#line 42 "flash.lex"
 { yylval.intval = atoi( yytext );
 			  return(NUMBER);	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "flash.lex"
+#line 44 "flash.lex"
 { yylval.boolval = (char *) strdup(yytext);
 			  return(BOOLEAN);	}	
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 30 "flash.lex"
+#line 46 "flash.lex"
 { yylval.strval = (char *) strdup(yytext);
 			  return(STRING);	}			  
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "flash.lex"
+#line 48 "flash.lex"
 { return(DO);		}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 33 "flash.lex"
+#line 49 "flash.lex"
 { return(ELSE);		}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 34 "flash.lex"
+#line 50 "flash.lex"
 { return(END);		}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 35 "flash.lex"
+#line 51 "flash.lex"
 { return(FI);		}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 36 "flash.lex"
+#line 52 "flash.lex"
 { return(IF);		}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 37 "flash.lex"
+#line 53 "flash.lex"
 { return(FUN);		}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 38 "flash.lex"
+#line 54 "flash.lex"
 { return(END_FUN);	}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 39 "flash.lex"
+#line 55 "flash.lex"
 { return(RETURN);	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 40 "flash.lex"
+#line 56 "flash.lex"
 { return(CALL);		}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 41 "flash.lex"
+#line 57 "flash.lex"
 { return(LEQ);		}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 42 "flash.lex"
+#line 58 "flash.lex"
 { return(GEQ);		}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 43 "flash.lex"
+#line 59 "flash.lex"
 { return(ONTO);		}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 44 "flash.lex"
+#line 60 "flash.lex"
 { return(OUTFROM);	}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 45 "flash.lex"
+#line 61 "flash.lex"
 { return(IN);		}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 46 "flash.lex"
+#line 62 "flash.lex"
 { return(INTEGER); 	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 47 "flash.lex"
+#line 63 "flash.lex"
 { return(BOOLE);	}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 48 "flash.lex"
+#line 64 "flash.lex"
 { return(STR);		}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 49 "flash.lex"
+#line 65 "flash.lex"
 { return(STACK);	}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 50 "flash.lex"
+#line 66 "flash.lex"
 { return(LET);		}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 51 "flash.lex"
+#line 67 "flash.lex"
 { return(READ);		}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 52 "flash.lex"
+#line 68 "flash.lex"
 { return(SKIP);		}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 53 "flash.lex"
+#line 69 "flash.lex"
 { return(THEN);		}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 54 "flash.lex"
+#line 70 "flash.lex"
 { return(WHILE);	}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 55 "flash.lex"
+#line 71 "flash.lex"
 { return(WRITE);	}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "flash.lex"
+#line 72 "flash.lex"
 { yylval.id = (char *) strdup(yytext);
 			  return(IDENTIFIER);}
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 58 "flash.lex"
+#line 74 "flash.lex"
 /* eat up whitespace */
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 59 "flash.lex"
+#line 75 "flash.lex"
 { return(yytext[0]);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 60 "flash.lex"
+#line 76 "flash.lex"
 ECHO;
 	YY_BREAK
-#line 1032 "lex.yy.c"
+#line 1048 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2041,7 +2057,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 60 "flash.lex"
+#line 76 "flash.lex"
 
 
 int yywrap(void){}

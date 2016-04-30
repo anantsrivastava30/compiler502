@@ -1,3 +1,19 @@
+/*=========================================================================
+TEAM : Team 31, Team Flash, Very Fast Much Wow.
+
+Members : Anant Srivastava
+		  Bharat Singh
+		  Wenbo Tian
+		  Vidyaabharathi Vasudevan
+
+Build Using : FLEX(2.6.0), BISON (GNU 3.0.4), C;		  
+
+References : Compiler Construction using Flex and Bison,
+						Anthony A. Aaby,
+			 		email :	aabyan@wwc.edu
+			 	  version of Feburary 25,2004.
+	OPEN PUBLIC LISCENCE : https://opencontent.org/openpub
+=========================================================================*/
 /***************************************************************************
 							Symbol Table Module
 ***************************************************************************/
@@ -48,7 +64,7 @@ struct instruction
 
 /* CODE Array */
 
-struct instruction code[999];
+struct instruction code[9999];
 
 /* RUN-TIME Stack */
 

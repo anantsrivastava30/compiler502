@@ -1,3 +1,20 @@
+/*=========================================================================
+TEAM : Team 31, Team Flash, Very Fast Much Wow.
+
+Members : Anant Srivastava
+		  Bharat Singh
+		  Wenbo Tian
+		  Vidyaabharathi Vasudevan
+
+Build Using : FLEX(2.6.0), BISON (GNU 3.0.4), C;		  
+
+References : Compiler Construction using Flex and Bison,
+						Anthony A. Aaby,
+			 		email :	aabyan@wwc.edu
+			 	  version of Feburary 25,2004.
+	OPEN PUBLIC LISCENCE : https://opencontent.org/openpub
+=========================================================================*/
+
 /***************************************************************************
 								Code Generator
 ***************************************************************************/
@@ -81,26 +98,23 @@ void print_code( FILE *fp )
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
-	else if( strcmp(op_name[(int) code[i].op],"ld_var") == 0 || 
-				strcmp(op_name[(int) code[i].op],"addstk") == 0 || 
-				strcmp(op_name[(int) code[i].op],"remstk") == 0) {
+	else if( strcmp(op_name[(int) code[i].op],"ld_var") == 0 || strcmp(op_name[(int) code[i].op],"addstk") == 0 || strcmp(op_name[(int) code[i].op],"remstk") == 0) {
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
-	else if( strcmp(op_name[(int) code[i].op],"arg") == 0 || 
-				strcmp(op_name[(int) code[i].op],"store") == 0) {
+	else if( strcmp(op_name[(int) code[i].op],"arg") == 0 || strcmp(op_name[(int) code[i].op],"store") == 0) {
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
-	else if( strcmp(op_name[(int) code[i].op],"para_int") == 0 || 
-				strcmp(op_name[(int) code[i].op],"para_bool") == 0 || 
-				strcmp(op_name[(int) code[i].op],"para_str") == 0) {
+	else if( strcmp(op_name[(int) code[i].op],"para_int") == 0 || strcmp(op_name[(int) code[i].op],"para_bool") == 0 || strcmp(op_name[(int) code[i].op],"para_str") == 0) {
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
-	else if( strcmp(op_name[(int) code[i].op],"read_int") == 0 || 
-				strcmp(op_name[(int) code[i].op],"read_bool") == 0 || 
-				strcmp(op_name[(int) code[i].op],"read_str") == 0) {
+	else if( strcmp(op_name[(int) code[i].op],"read_int") == 0 || strcmp(op_name[(int) code[i].op],"read_bool") == 0 || strcmp(op_name[(int) code[i].op],"read_str") == 0) {
+		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
+		i++;
+	}
+	else if( strcmp(op_name[(int) code[i].op],"in_int") == 0 || strcmp(op_name[(int) code[i].op],"in_bool") == 0 || strcmp(op_name[(int) code[i].op],"in_str") == 0) {
 		fprintf(fp,"%3ld: %-10s %3s\n",i,op_name[(int) code[i].op], code[i].name );
 		i++;
 	}
@@ -109,5 +123,6 @@ void print_code( FILE *fp )
 		i++;
 		}
 	}
-}
+	}
+
 /************************** End Code Generator **************************/
